@@ -9,7 +9,7 @@ export default defineComponent({
   },
   async run({ steps, $ }) {
     try {
-      const customerId = "YOUR_CUSTOMER_ID"; // Ersetzen Sie durch die tatsächliche Kunden-ID
+      const customerId = "YOUR_CUSTOMER_ID"; // Replace with actual customer ID
       if (!customerId) {
         throw new Error("Customer ID is missing");
       }
@@ -27,10 +27,25 @@ export default defineComponent({
       });
 
       const ads = response.data.adGroupAds || [];
-      const rejectedAds = ads.filter((ad) => ad.status === "REJECTED");
+      const inactiveAds = ads.filter((ad) => ad.status === "INACTIVE");
 
+      if (inactiveAds.length > 0) {
+        return inactiveAds;
+      }
+
+      const rejectedAds = ads.filter((ad) => ad.status === "REJECTED");
       if (rejectedAds.length > 0) {
         return rejectedAds;
+      }
+
+      const approvedAds = ads.filter((ad) => ad.status === "APPROVED");
+      if (approvedAds.length > 0) {
+        return approvedAds;
+      }
+
+      const nonActiveAds = ads.filter((ad) => ad.status !== "APPROVED" && ad.status !== "REJECTED");
+      if (nonActiveAds.length > 0) {
+        return nonActiveAds;
       }
     } catch (error) {
       console.error("An error occurred:", error);
@@ -38,7 +53,7 @@ export default defineComponent({
         console.error("Error Data:", error.response.data);
         console.error("Error Status:", error.response.status);
       }
-      // Weitere Fehlerbehandlung hier
+      // Additional error handling here
     }
   },
 });
