@@ -1,0 +1,32 @@
+schema: workflow/2022.04
+name: Run Node.js with the OpenAI (ChatGPT) API
+settings:
+  error_notification: true
+triggers:
+- id: ti_j9TNXMD
+steps:
+- namespace: google_ads_1
+  runtime: nodejs18.x
+  uses: "./google_ads_1/entry.js"
+  props:
+    google_ads:
+      authProvisionId: apn_AVhOVbY
+- namespace: code
+  runtime: nodejs18.x
+  uses: "./code/entry.js"
+  props:
+    __configurableProps:
+    - type: app
+      app: openai
+      name: openai
+      authType: keys
+      appId: app_mWnhBo
+    openai:
+      authProvisionId: apn_V1hmw8L
+- namespace: google_ads
+  runtime: nodejs18.x
+  uses: "./google_ads/entry.js"
+  props:
+    google_ads:
+      authProvisionId: apn_AVhOVbY
+
